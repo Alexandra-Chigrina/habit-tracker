@@ -1,3 +1,5 @@
+from unittest.mock import patch, Mock
+
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.test import TestCase
@@ -6,6 +8,8 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from habits.models import Habit
+from habits.services import send_telegram_message
+from habits.tasks import send_habit_reminders
 from habits.validators import validate_reward_and_related_habit, validate_pleasant_habit, validate_duration_limit, \
     validate_period
 
@@ -153,3 +157,40 @@ class ValidatorTestCase(TestCase):
                 "period": 8
             })
         self.assertIn("Периодичность должна быть от 1 до 7 дней", str(e.exception))
+
+
+class ServiceTestCase(TestCase):
+
+    @patch("habits.services.requests.get")
+    def test_send_telegram_message_success(self, mock_get):
+        mock_response = Mock()
+        mock_response.ok = True
+        mock_get.return_value = mock_response
+
+        chat_id = "123456789"
+        message = "Тестовое сообщение"
+
+        send_telegram_message(chat_id, message)
+
+        mock_get.assert_called_once()
+        called_url = mock_get.call_args[0][0]
+        called_params = mock_get.call_args[1]["params"]
+
+        self.assertIn("sendMessage", called_url)
+        self.assertEqual(called_params["chat_id"], chat_id)
+        self.assertEqual(called_params["text"], message)
+
+    @patch("habits.services.requests.get")
+    def test_send_telegram_message_error(self, mock_get):
+        mock_response = Mock()
+        mock_response.ok = False
+        mock_response.status_code = 400
+        mock_response.text = "Bad Request: chat not found"
+        mock_get.return_value = mock_response
+
+        chat_id = "wrong_chat"
+        message = "Ошибка"
+
+        send_telegram_message(chat_id, message)
+
+        mock_get.assert_called_once()
