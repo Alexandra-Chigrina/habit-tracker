@@ -26,5 +26,5 @@ def validate_period(attrs):
 
 def validate_duration_limit(attrs):
     if attrs.get("duration", 0) > 120:
-        raise ValidationError("Время выполнения не может превышать 120 секунд.")
+        raise ValidationError("Время выполнения не может превышать 120 секунд")
     return attrs
