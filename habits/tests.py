@@ -1,17 +1,20 @@
-from unittest.mock import patch, Mock
+from unittest.mock import Mock, patch
 
 from django.contrib.auth import get_user_model
-from django.urls import reverse
 from django.test import TestCase
-from rest_framework.exceptions import ValidationError
+from django.urls import reverse
 from rest_framework import status
+from rest_framework.exceptions import ValidationError
 from rest_framework.test import APITestCase
 
 from habits.models import Habit
 from habits.services import send_telegram_message
-from habits.tasks import send_habit_reminders
-from habits.validators import validate_reward_and_related_habit, validate_pleasant_habit, validate_duration_limit, \
-    validate_period
+from habits.validators import (
+    validate_duration_limit,
+    validate_period,
+    validate_pleasant_habit,
+    validate_reward_and_related_habit,
+)
 
 User = get_user_model()
 
@@ -30,7 +33,7 @@ class HabitTestCase(APITestCase):
             is_pleasant=False,
             period=1,
             duration=60,
-            is_public=False
+            is_public=False,
         )
         self.public_habit = Habit.objects.create(
             user=self.other_user,
@@ -40,7 +43,7 @@ class HabitTestCase(APITestCase):
             is_pleasant=False,
             period=1,
             duration=90,
-            is_public=True
+            is_public=True,
         )
         self.detail_url = reverse("habits:habits-detail", args=(self.own_habit.pk,))
         self.public_detail_url = reverse("habits:habits-detail", args=(self.public_habit.pk,))
@@ -82,7 +85,7 @@ class HabitTestCase(APITestCase):
             "is_pleasant": False,
             "period": 1,
             "duration": 90,
-            "is_public": False
+            "is_public": False,
         }
         response = self.client.post(self.list_url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -95,6 +98,7 @@ class ValidatorTestCase(TestCase):
 
     def _create_habit(self, is_pleasant=True):
         from habits.models import Habit
+
         return Habit.objects.create(
             user=self.user,
             place="Дом",
@@ -103,59 +107,41 @@ class ValidatorTestCase(TestCase):
             is_pleasant=is_pleasant,
             period=1,
             duration=60,
-            is_public=False
+            is_public=False,
         )
 
     def test_both_reward_and_related_habit(self):
         related = self._create_habit(is_pleasant=True)
 
         with self.assertRaises(ValidationError) as e:
-            validate_reward_and_related_habit({
-                "reward": "Сладкое",
-                "related_habit": related
-            })
+            validate_reward_and_related_habit({"reward": "Сладкое", "related_habit": related})
         self.assertIn("Нельзя указывать и вознаграждение, и связанную привычку", str(e.exception))
 
     def test_related_habit_must_be_pleasant(self):
         related = self._create_habit(is_pleasant=False)
 
         with self.assertRaises(ValidationError) as e:
-            validate_reward_and_related_habit({
-                "reward": None,
-                "related_habit": related
-            })
+            validate_reward_and_related_habit({"reward": None, "related_habit": related})
         self.assertIn("Связанная привычка должна быть помечена как приятная", str(e.exception))
 
     def test_pleasant_habit_must_not_have_reward_or_related(self):
         with self.assertRaises(ValidationError) as e:
-            validate_pleasant_habit({
-                "reward": "Сладкое",
-                "related_habit": None,
-                "is_pleasant": True
-            })
+            validate_pleasant_habit({"reward": "Сладкое", "related_habit": None, "is_pleasant": True})
         self.assertIn("Приятная привычка не может иметь награду или связанную привычку", str(e.exception))
 
         related = self._create_habit(is_pleasant=True)
         with self.assertRaises(ValidationError) as e:
-            validate_pleasant_habit({
-                "reward": None,
-                "related_habit": related,
-                "is_pleasant": True
-            })
+            validate_pleasant_habit({"reward": None, "related_habit": related, "is_pleasant": True})
         self.assertIn("Приятная привычка не может иметь награду или связанную привычку", str(e.exception))
 
     def test_duration_must_not_exceed_120(self):
         with self.assertRaises(ValidationError) as e:
-            validate_duration_limit({
-                "duration": 150
-            })
+            validate_duration_limit({"duration": 150})
         self.assertIn("Время выполнения не может превышать 120 секунд", str(e.exception))
 
     def test_period_must_not_be_more_than_7_days(self):
         with self.assertRaises(ValidationError) as e:
-            validate_period({
-                "period": 8
-            })
+            validate_period({"period": 8})
         self.assertIn("Периодичность должна быть от 1 до 7 дней", str(e.exception))
 
 

@@ -17,43 +17,42 @@ from habits.serializers import HabitSerializer
         Возвращает список привычек:
         - если передан параметр `is_public=true`, возвращаются все публичные привычки;
         - иначе возвращаются только привычки текущего пользователя.
-        """
-    )
+        """,
+    ),
 )
 @method_decorator(
     name="retrieve",
     decorator=swagger_auto_schema(
         operation_summary="Получить привычку по ID",
-        operation_description="Возвращает одну привычку. Доступна только владельцу привычки."
-    )
+        operation_description="Возвращает одну привычку. Доступна только владельцу привычки.",
+    ),
 )
 @method_decorator(
     name="create",
     decorator=swagger_auto_schema(
         operation_summary="Создать привычку",
-        operation_description="Создает новую привычку, привязанную к текущему пользователю."
-    )
+        operation_description="Создает новую привычку, привязанную к текущему пользователю.",
+    ),
 )
 @method_decorator(
     name="update",
     decorator=swagger_auto_schema(
         operation_summary="Обновить привычку",
-        operation_description="Полное обновление привычки. Доступно только владельцу."
-    )
+        operation_description="Полное обновление привычки. Доступно только владельцу.",
+    ),
 )
 @method_decorator(
     name="partial_update",
     decorator=swagger_auto_schema(
         operation_summary="Частично обновить привычку",
-        operation_description="Частичное обновление привычки. Доступно только владельцу."
-    )
+        operation_description="Частичное обновление привычки. Доступно только владельцу.",
+    ),
 )
 @method_decorator(
     name="destroy",
     decorator=swagger_auto_schema(
-        operation_summary="Удалить привычку",
-        operation_description="Удаляет привычку. Доступно только владельцу."
-    )
+        operation_summary="Удалить привычку", operation_description="Удаляет привычку. Доступно только владельцу."
+    ),
 )
 class HabitViewSet(ModelViewSet):
     queryset = Habit.objects.all()

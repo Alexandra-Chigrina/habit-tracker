@@ -12,24 +12,24 @@ from users.serializers import UserRegisterSerializer, UserSerializer
     decorator=swagger_auto_schema(
         operation_summary="Профиль пользователя",
         operation_description="Получает информацию о текущем авторизованном пользователе.",
-        tags=["Профиль"]
-    )
+        tags=["Профиль"],
+    ),
 )
 @method_decorator(
     name="put",
     decorator=swagger_auto_schema(
         operation_summary="Обновление профиля",
         operation_description="Обновляет профиль текущего пользователя.",
-        tags=["Профиль"]
-    )
+        tags=["Профиль"],
+    ),
 )
 @method_decorator(
     name="patch",
     decorator=swagger_auto_schema(
         operation_summary="Частичное обновление профиля",
         operation_description="Частично обновляет профиль текущего пользователя.",
-        tags=["Профиль"]
-    )
+        tags=["Профиль"],
+    ),
 )
 class UserProfileView(RetrieveUpdateAPIView):
     serializer_class = UserSerializer
@@ -49,8 +49,8 @@ class UserProfileView(RetrieveUpdateAPIView):
         Требуемые поля:
         - email
         - password
-        """
-    )
+        """,
+    ),
 )
 class UserCreateAPIView(CreateAPIView):
     queryset = User.objects.all()

@@ -9,7 +9,7 @@ from users.models import User
 @shared_task
 def send_habit_reminders():
     """Отправляет напоминание пользователям о привычках, запланированных на текущее время"""
-    current_time = timezone.localtime().time().strftime('%H:%M')
+    current_time = timezone.localtime().time().strftime("%H:%M")
     users = User.objects.filter(tg_chat_id__isnull=False)
     for user in users:
         habits = Habit.objects.filter(time=current_time, user=user)
