@@ -1,10 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
-from rest_framework.test import APITestCase
 from django.test import TestCase
-from rest_framework import status
 from django.urls import reverse
-
+from rest_framework import status
+from rest_framework.test import APITestCase
 
 User = get_user_model()
 

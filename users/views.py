@@ -1,9 +1,8 @@
 from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from users.models import User
-from users.serializers import UserSerializer, UserRegisterSerializer
-
+from users.serializers import UserRegisterSerializer, UserSerializer
 
 
 class UserProfileView(RetrieveUpdateAPIView):

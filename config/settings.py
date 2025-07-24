@@ -24,7 +24,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-
     "habits",
     "users",
 ]
@@ -73,7 +72,6 @@ DATABASES = {
         "PORT": os.getenv("PORT"),
     }
 }
-
 
 
 AUTH_PASSWORD_VALIDATORS = [
