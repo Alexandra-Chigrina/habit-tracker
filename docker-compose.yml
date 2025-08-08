@@ -1,0 +1,15 @@
+services:
+  web:
+
+  nginx:
+
+  db:
+
+  redis:
+
+  celery:
+
+  celery-beat:
+
+
+volumes:
