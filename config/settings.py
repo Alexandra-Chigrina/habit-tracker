@@ -13,8 +13,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = True if os.getenv("DEBUG") == "True" else False
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -105,6 +104,7 @@ USE_TZ = True
 
 
 STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
@@ -118,15 +118,14 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-]
+CORS_ALLOW_ALL_ORIGINS = True                # для разработки!
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000",
+    "http://localhost",
+    "http://127.0.0.1",
+    "http://django",
+    f"http://{os.getenv('VM_IP')}",
 ]
-
-CORS_ALLOW_ALL_ORIGINS = False
 
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_TASK_TRACK_STARTED = True
