@@ -126,7 +126,7 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
-CORS_ALLOW_ALL_ORIGINS = True                # для разработки!
+CORS_ALLOW_ALL_ORIGINS = True  # для разработки!
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost",
