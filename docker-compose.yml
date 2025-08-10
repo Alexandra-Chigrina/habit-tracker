@@ -36,9 +36,9 @@ services:
   db:
     image: postgres:17
     environment:
-      POSTGRES_DB: ${NAME}
-      POSTGRES_USER: ${USER}
-      POSTGRES_PASSWORD: ${PASSWORD}
+      POSTGRES_DB: ${POSTGRES_NAME}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - pg_data:/var/lib/postgresql/data
     ports:
